@@ -2,8 +2,36 @@
 const todo = require('yargs');
 const fs = require('fs');
 
+const transformArgumentsIntoRecords = (consoleArgument) => {
+  const recordsArray = [];
+  consoleArgument.forEach((record) => {
+    const dataArray = record.split('-');
+    const [name, phone, description] = dataArray;
+    const buisnessRecord = { name, phone, description };
+    recordsArray.unshift(buisnessRecord);
+  });
+  return recordsArray;
+};
+// writeRecord
+const writeNote = (args, requiredFile) => {
+  const constructedNote = { title: args.title };
+  if ('list' in args) {
+    constructedNote.records = transformArgumentsIntoRecords(args.list);
+  } else {
+    if ('occupation' in args) {
+      constructedNote.phone = args.phone;
+      constructedNote.occupation = args.occupation;
+    } else constructedNote.phone = args.phone;
+  }
+
+  requiredFile.push(constructedNote);
+  fs.writeFileSync(args.file + '.json', JSON.stringify(requiredFile, null, '\t'), 'utf8', () => {
+  });
+};
+
 // eslint-disable-next-line no-unused-expressions
-todo.command('Add', 'makes an action with a file', function (yargs) {
+// add type
+todo.command('Add', `makes an action with a file`, function (yargs) {
   return yargs.options({
     'list': {
       alias: 'l',
@@ -12,8 +40,8 @@ todo.command('Add', 'makes an action with a file', function (yargs) {
       demandOption: false,
       array: true
     },
-    'path': {
-      alias: 'p',
+    'file': {
+      alias: 'f',
       describe: 'path to file',
       demandOption: true
     },
@@ -24,7 +52,7 @@ todo.command('Add', 'makes an action with a file', function (yargs) {
       demandOption: true
     },
     'phone': {
-      alias: 'b',
+      alias: 'p',
       describe: 'node phone',
       conflicts: 'list',
       demandOption: false
@@ -39,7 +67,7 @@ todo.command('Add', 'makes an action with a file', function (yargs) {
   });
 },
 function (argv) {
-  const jsonObject = require('./' + argv.path + '.json');
+  const jsonObject = require('./' + argv.file + '.json');
   try {
     writeNote(argv, jsonObject);
   } catch (err) {
@@ -48,105 +76,23 @@ function (argv) {
 })
   .command('List', 'makes an action with a file', function (yargs) {
     return yargs.options({
-      'path': {
-        alias: 'p',
+      'file': {
+        alias: 'f',
         describe: 'path to file',
         demandOption: true
       }
     });
   },
   function (argv) {
-    const jsonObject = require('./' + argv.path + '.json');
+    const jsonObject = require('./' + argv.file + '.json');
     ListNotes(argv, jsonObject);
-  }
-  )
-  .command('Read', 'makes an action with a file', function (yargs) {
-    return yargs.options({
-      'path': {
-        alias: 'p',
-        describe: 'path to file',
-        demandOption: true
-      },
-      'title': {
-        alias: 't',
-        describe: 'node title',
-        demandOption: true
-      }
-    });
-  },
-  function (argv) {
-    const jsonObject = require('./' + argv.path + '.json');
-    readNote(argv, jsonObject);
-  })
-  .command('Remove', 'makes an action with a file', function (yargs) {
-    return yargs.options({
-      'path': {
-        alias: 'p',
-        describe: 'path to file',
-        demandOption: true
-      },
-      'title': {
-        alias: 't',
-        describe: 'node title',
-        demandOption: true
-      }
-    });
-  },
-  function (argv) {
-    const jsonObject = require('./' + argv.path + '.json');
-    removeNote(argv, jsonObject);
   }
   )
   .help()
   .argv;
 
-function writeNote (args, requiredFile) {
-  let constructedNote = {};
-  if ('list' in args) {
-    constructedNote = { title: args.title, records: [args.list] };
-  } else {
-    const { phone, occupation } = args;
-    (typeof occupation === 'undefined') ? (constructedNote = { title: args.title, phone })
-      : (constructedNote = { title: args.title, phone, occupation });
-  }
-
-  requiredFile.push(constructedNote);
-  fs.writeFileSync(args.path + '.json', JSON.stringify(requiredFile, null, '\t'), 'utf8', () => {
-  });
-}
-
 function ListNotes (args, requiredFile) {
-  requiredFile.forEach(function (node) {
+  requiredFile.forEach((node) => {
     console.log(node);
-  });
-}
-
-function readNote (args, requiredFile) {
-  const result = requiredFile.filter(function (node) {
-    return node.title === args.title;
-  });
-  (result.length === 0) ? console.log('Nothing') : (console.log(result));
-}
-
-function removeNote (args, requiredFile) {
-  const result = requiredFile.filter((node) => node.title !== args.title);
-  fs.writeFile(args.path + '.json', JSON.stringify(result, null, '\t'), 'utf8', () => {
-    // eslint-disable-next-line no-console
-    console.log(args.title + 'successfully Removed');
-  });
-}
-
-function checkForDuplicates (args, file) {
-  const result = file.filter(function (note) {
-    return note.title === args.title;
-  });
-  console.log(result.length + ` notes with title "${args.title}" in file`);
-  return result.length;
-}
-
-function checkforNotesWithMissingBody (args, file) {
-  const result = file.filter((note) => !('phone' in note));
-  result.forEach(note => {
-    console.log(`note with ${note.title} + " is missing a phone`);
   });
 }

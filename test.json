@@ -1,18 +1,6 @@
 [
 	{
-		"title": "t",
-		"body": "b"
-	},
-	{
 		"title": "John",
-		"phone": 35346
-	},
-	{
-		"title": "John.Smith",
-		"phone": 35346
-	},
-	{
-		"title": "John.Smith",
 		"phone": 35346
 	},
 	{
@@ -29,6 +17,56 @@
 		"occupation": "manager"
 	},
 	{
-		"title": "John.Smith"
+		"title": "Sam",
+		"records": [
+			"c1",
+			"c2",
+			"c3"
+		]
+	},
+	{
+		"title": "bob",
+		"records": [
+			{
+				"name": "Alexey",
+				"phone": "86383",
+				"description": "recruiter"
+			},
+			{
+				"name": "Aliaksandr",
+				"phone": "41234",
+				"description": "manager"
+			}
+		]
+	},
+	{
+		"title": "bob",
+		"records": [
+			{
+				"name": "Alexey",
+				"phone": "86383",
+				"description": "recruiter"
+			},
+			{
+				"name": "Aliaksandr",
+				"phone": "41234",
+				"description": "manager"
+			}
+		]
+	},
+	{
+		"title": "EPAM",
+		"records": [
+			{
+				"name": "Alexey",
+				"phone": "86383",
+				"description": "recruiter"
+			},
+			{
+				"name": "Aliaksandr",
+				"phone": "41234",
+				"description": "manager"
+			}
+		]
 	}
 ]
