@@ -1,36 +1,63 @@
 /* eslint-disable no-console */
 const todo = require('yargs');
 const fs = require('fs');
+class Record {
+  constructor (name) {
+    this.name = name;
+  }
+}
 
+class Organization extends Record {
+  constructor (name, list) {
+    super(name);
+    this.empList = list;
+  }
+}
+
+class PersonalRecord extends Record {
+  constructor (name, phone) {
+    super(name);
+    this.phone = phone;
+  }
+}
+class BuisnessRecord extends PersonalRecord {
+  constructor (name, phone, description) {
+    super(name, phone);
+    this.description = description;
+  }
+}
+// @TODO change function to just parse proper object from String
 const transformArgumentsIntoRecords = (consoleArgument) => {
   const recordsArray = [];
   consoleArgument.forEach((record) => {
     const dataArray = record.split('-');
     const [name, phone, description] = dataArray;
     const buisnessRecord = { name, phone, description };
-    recordsArray.unshift(buisnessRecord);
+    recordsArray.push(buisnessRecord);
   });
   return recordsArray;
 };
-// writeRecord
-const writeNote = (args, requiredFile) => {
-  const constructedNote = { title: args.title };
-  if ('list' in args) {
-    constructedNote.records = transformArgumentsIntoRecords(args.list);
-  } else {
-    if ('occupation' in args) {
-      constructedNote.phone = args.phone;
-      constructedNote.occupation = args.occupation;
-    } else constructedNote.phone = args.phone;
-  }
 
-  requiredFile.push(constructedNote);
+const writeRecrod = (args, requiredFile) => {
+  if ('list' in args) {
+    requiredFile.push(new Organization(args.title, transformArgumentsIntoRecords(args.list)));
+  } else {
+    if ('description' in args) {
+      requiredFile.push(new BuisnessRecord(args.title, args.phone, args.description));
+    } else requiredFile.push(new PersonalRecord(args.title, args.phone));
+  }
   fs.writeFileSync(args.file + '.json', JSON.stringify(requiredFile, null, '\t'), 'utf8', () => {
   });
 };
 
-// eslint-disable-next-line no-unused-expressions
+const ListNotes = (args, requiredFile) => {
+  requiredFile.forEach((node) => {
+    console.log(node);
+  });
+};
+
 // add type
+// eslint-disable-next-line no-unused-expressions
 todo.command('Add', `makes an action with a file`, function (yargs) {
   return yargs.options({
     'list': {
@@ -57,8 +84,8 @@ todo.command('Add', `makes an action with a file`, function (yargs) {
       conflicts: 'list',
       demandOption: false
     },
-    'occupation': {
-      alias: 'o',
+    'description': {
+      alias: 'd',
       describe: 'node phone',
       implies: 'phone',
       conflicts: 'list',
@@ -69,7 +96,7 @@ todo.command('Add', `makes an action with a file`, function (yargs) {
 function (argv) {
   const jsonObject = require('./' + argv.file + '.json');
   try {
-    writeNote(argv, jsonObject);
+    writeRecrod(argv, jsonObject);
   } catch (err) {
     console.log(err.message);
   }
@@ -90,9 +117,3 @@ function (argv) {
   )
   .help()
   .argv;
-
-function ListNotes (args, requiredFile) {
-  requiredFile.forEach((node) => {
-    console.log(node);
-  });
-}
