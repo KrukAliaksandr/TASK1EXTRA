@@ -1,32 +1,24 @@
 [
 	{
-		"title": "John",
+		"name": "John",
 		"phone": 35346
 	},
 	{
-		"title": "John.Smith",
+		"name": "John.Smith",
 		"phone": 35346
 	},
 	{
-		"title": "John.Smith",
+		"name": "John.Smith",
 		"phone": "35354y2453"
 	},
 	{
-		"title": "John.Smith",
+		"name": "John.Smith",
 		"phone": 12531235,
-		"occupation": "manager"
+		"description": "manager"
 	},
 	{
-		"title": "Sam",
-		"records": [
-			"c1",
-			"c2",
-			"c3"
-		]
-	},
-	{
-		"title": "bob",
-		"records": [
+		"name": "bob",
+		"empList": [
 			{
 				"name": "Alexey",
 				"phone": "86383",
@@ -40,8 +32,8 @@
 		]
 	},
 	{
-		"title": "bob",
-		"records": [
+		"name": "bob",
+		"empList": [
 			{
 				"name": "Alexey",
 				"phone": "86383",
@@ -55,8 +47,8 @@
 		]
 	},
 	{
-		"title": "EPAM",
-		"records": [
+		"name": "EPAM",
+		"empList": [
 			{
 				"name": "Alexey",
 				"phone": "86383",

@@ -38,7 +38,7 @@ const transformIntoListOfRecords = (consoleArgument) => {
   return recordsArray;
 };
 
-const writeRecrod = (args, requiredFile) => {
+const writerecord = (args, requiredFile) => {
   if ('list' in args) {
     requiredFile.push(new Organization(args.title, transformIntoListOfRecords(args.list)));
   } else {
@@ -57,13 +57,58 @@ const listRecords = (args, requiredFile) => {
 };
 
 const removeRecords = (args, requiredFile) => {
-  const requiredRecord = new Organization(args.title, transformIntoListOfRecords(args.list));
-  console.log(requiredRecord);
-
-  const result = requiredFile.filter((fileRecord) => {
-    return Object.toJSON(requiredRecord) !== Object.toJSON(fileRecord);
+  let searchFiltersObj = {};
+  if ('list' in args) {
+    searchFiltersObj = new Organization(args.title, transformIntoListOfRecords(args.list));
+  } else {
+    if ('description' in args) {
+      searchFiltersObj = new BuisnessRecord(args.title, args.phone, args.description);
+    } else searchFiltersObj = new PersonalRecord(args.title, args.phone);
+  }
+  console.log(searchFiltersObj);
+  const results = requiredFile.filter(record => {
+    console.log(record);
+    let comparsionResult = true;
+    for (let parameter in record) {
+      console.log(parameter);
+      switch (parameter) {
+        case 'name':
+          if ((record.name !== searchFiltersObj.name)) comparsionResult = false;
+          console.log(record.name !== searchFiltersObj.name);
+          break;
+        case 'phone':
+          if ((record.phone !== searchFiltersObj.phone)) comparsionResult = false;
+          console.log(record.phone !== searchFiltersObj.phone);
+          break;
+        case 'description':
+          if ((record.description !== searchFiltersObj.description)) comparsionResult = false;
+          console.log(record.description !== searchFiltersObj.description);
+          break;
+        case 'empList':
+          // search for substring in character name. Approve only if the substring is situated at the start.
+          let recordNumberInList = 0;
+          while (recordNumberInList < record.empList.length) {
+            if (searchFiltersObj.empList[recordNumberInList].name !== record.empList[recordNumberInList].name ||
+              searchFiltersObj.empList[recordNumberInList].phone !== record.empList[recordNumberInList].phone ||
+              searchFiltersObj.empList[recordNumberInList].description !== record.empList[recordNumberInList].description) {
+              console.log('false on list comparsion result');
+              comparsionResult = false;
+              break;
+            }
+            recordNumberInList++;
+          }
+          break;
+        default:
+          if (record[parameter] !== searchFiltersObj[parameter]) {
+            comparsionResult = false;
+            console.log('false on default comparsion result');
+          }
+          break;
+      }
+    }
+    return !comparsionResult;
   });
-  fs.writeFileSync(args.file + '.json', JSON.stringify(result, null, '\t'), 'utf8', () => {
+  fs.writeFileSync(args.file + '.json', JSON.stringify(results, null, '\t'), 'utf8', () => {
   });
 };
 
@@ -107,7 +152,7 @@ todo.command('Add', `makes an action with a file`, function (yargs) {
 function (argv) {
   const jsonObject = require('./' + argv.file + '.json');
   try {
-    writeRecrod(argv, jsonObject);
+    writerecord(argv, jsonObject);
   } catch (err) {
     console.log(err.message);
   }
@@ -149,11 +194,7 @@ function (argv) {
   },
   function (argv) {
     const jsonObject = require('./' + argv.file + '.json');
-    try {
-      removeRecords(argv, jsonObject);
-    } catch (err) {
-      console.log(err.message);
-    }
+    removeRecords(argv, jsonObject);
   })
   .command('List', 'makes an action with a file', function (yargs) {
     return yargs.options({
