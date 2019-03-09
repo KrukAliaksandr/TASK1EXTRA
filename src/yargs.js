@@ -41,7 +41,7 @@ todo.command('Add', `makes an action with a file`, function (yargs) {
   });
 },
 function (argv) {
-  const jsonObject = require(path.resolve('./' + argv.file + '.json'));
+  const jsonObject = require(path.resolve(`./testSamples/${argv.file}.json`));
   try {
     writeRecordToFile(argv, jsonObject);
   } catch (err) {
@@ -84,7 +84,7 @@ function (argv) {
     });
   },
   function (argv) {
-    const jsonObject = require(path.resolve('./' + argv.file + '.json'));
+    const jsonObject = require(path.resolve(`./testSamples/${argv.file}.json`));
     try {
       removeRecordsFromFile(argv, jsonObject);
     } catch (err) {
@@ -127,7 +127,7 @@ function (argv) {
     });
   },
   function (argv) {
-    const jsonObject = require(path.resolve('./' + argv.file + '.json'));
+    const jsonObject = require(path.resolve(`./testSamples/${argv.file}.json`));
     try {
       findRecordsInFile(argv, jsonObject);
     } catch (err) {
@@ -144,7 +144,7 @@ function (argv) {
     });
   },
   function (argv) {
-    const jsonObject = require('./' + argv.file + '.json');
+    const jsonObject = require(path.resolve(`./testSamples/${argv.file}.json`));
     try {
       listRecords(argv, jsonObject);
     } catch (err) {
