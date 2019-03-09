@@ -34,6 +34,20 @@ const listRecords = (args, requiredFile) => {
   });
 };
 
+const compareEmployeeLists = (requiredList, listToBeChecked) => {
+  let comparsionResult = true;
+  let recordNumberInList = 0;
+  while (recordNumberInList < listToBeChecked.length) {
+    if (requiredList[recordNumberInList].name !== listToBeChecked[recordNumberInList].name ||
+      requiredList[recordNumberInList].phone !== listToBeChecked[recordNumberInList].phone ||
+      requiredList[recordNumberInList].description !== listToBeChecked[recordNumberInList].description) {
+      comparsionResult = false;
+      break;
+    }
+    recordNumberInList++;
+  }
+  return comparsionResult;
+};
 // if 'exclude matches' key is set, found records will be excluded from results
 const filterRecords = (searchFiltersObject, jsonArray, filterParameter = 'includeMatches') => {
   const resultsArray = jsonArray.filter(record => {
@@ -51,19 +65,7 @@ const filterRecords = (searchFiltersObject, jsonArray, filterParameter = 'includ
           break;
         case 'empList':
           // search for substring in character name. Approve only if the substring is situated at the start.
-          let recordNumberInList = 0;
-          while (recordNumberInList < record.empList.length) {
-            if (searchFiltersObject.empList[recordNumberInList].name !== record.empList[recordNumberInList].name ||
-                searchFiltersObject.empList[recordNumberInList].phone !== record.empList[recordNumberInList].phone ||
-                searchFiltersObject.empList[recordNumberInList].description !== record.empList[recordNumberInList].description) {
-              recordComparsionResult = false;
-              break;
-            }
-            recordNumberInList++;
-          }
-          break;
-        default:
-          if (record[parameter] !== searchFiltersObject[parameter]) {
+          if (compareEmployeeLists(searchFiltersObject.empList, record.empList) === false) {
             recordComparsionResult = false;
           }
           break;
