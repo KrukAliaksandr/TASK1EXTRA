@@ -1,6 +1,29 @@
 const { Organization, PersonalRecord, BuisnessRecord } = require('./recordTypes');
 const fs = require('fs');
 
+const removeRecordsFromFile = (args, requiredFile) => {
+  const results = filterRecords(createRecord(args), requiredFile, 'excludeMatches');
+  fs.writeFileSync(`./testSamples/${args.file}.json`, JSON.stringify(results, null, '\t'), 'utf8', () => {
+  });
+};
+
+const findRecordsInFile = (args, requiredFile) => {
+  const results = filterRecords(createRecord(args), requiredFile);
+  console.log(JSON.stringify(results, null, '\t'));
+};
+
+const writeRecordToFile = (args, requiredFile) => {
+  requiredFile.push(createRecord(args));
+  fs.writeFileSync(`./testSamples/${args.file}.json`, JSON.stringify(requiredFile, null, '\t'), 'utf8', () => {
+  });
+};
+
+const listRecords = (args, requiredFile) => {
+  requiredFile.forEach((node) => {
+    console.log(node);
+  });
+};
+
 const transformIntoListOfRecords = (consoleArgument) => {
   const recordsArray = [];
   consoleArgument.forEach((record) => {
@@ -20,18 +43,6 @@ const createRecord = (args) => {
       return new BuisnessRecord(args.title, args.phone, args.description);
     } else return new PersonalRecord(args.title, args.phone);
   }
-};
-
-const writeRecordToFile = (args, requiredFile) => {
-  requiredFile.push(createRecord(args));
-  fs.writeFileSync(args.file + '.json', JSON.stringify(requiredFile, null, '\t'), 'utf8', () => {
-  });
-};
-
-const listRecords = (args, requiredFile) => {
-  requiredFile.forEach((node) => {
-    console.log(node);
-  });
 };
 
 const compareEmployeeLists = (requiredList, listToBeChecked) => {
@@ -75,17 +86,6 @@ const filterRecords = (searchFiltersObject, jsonArray, filterParameter = 'includ
     return (filterParameter === 'excludeMatches') ? (!recordComparsionResult) : (recordComparsionResult);
   });
   return resultsArray;
-};
-
-const removeRecordsFromFile = (args, requiredFile) => {
-  const results = filterRecords(createRecord(args), requiredFile, 'excludeMatches');
-  fs.writeFileSync(args.file + '.json', JSON.stringify(results, null, '\t'), 'utf8', () => {
-  });
-};
-
-const findRecordsInFile = (args, requiredFile) => {
-  const results = filterRecords(createRecord(args), requiredFile);
-  console.log(JSON.stringify(results, null, '\t'));
 };
 
 module.exports = {
