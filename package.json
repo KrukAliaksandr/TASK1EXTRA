@@ -5,10 +5,10 @@
   "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "testAdd": "node src/index Add -f=phonebook1 -t=EPAM --list=Nick-124415-manager John-1398591-QaEngineer",
-    "testRemove": "node src/index Remove -f=phonebook1 -t=EPAM --list=Nick-124415-manager John-1398591-QaEngineer",
-    "testFind": "node src/index Find -f=phonebook1 -t=EPAM --list=Nick-124415-manager John-1398591-QaEngineer",
-    "testList":"node src/yargs List -f=test -t=IBA"
+    "testAdd": "node src/index Add -f=phonebook1 ",
+    "testRemove": "node src/index Remove -f=phonebook1 ",
+    "testFind": "node src/index Find -f=phonebook1",
+    "testList":"node src/index List -f=phonebook1 "
   },
   "repository": {
     "type": "git",

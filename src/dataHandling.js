@@ -47,19 +47,16 @@ const createRecord = (args) => {
 
 const compareEmployeeLists = (requiredList, listToBeChecked) => {
   let comparsionResult = true;
-  let recordNumberInList = 0;
-  // listToBeChecked.forEach(record,index){}
-  while (recordNumberInList < listToBeChecked.length) {
-    if (requiredList[recordNumberInList].name !== listToBeChecked[recordNumberInList].name ||
-      requiredList[recordNumberInList].phone !== listToBeChecked[recordNumberInList].phone ||
-      requiredList[recordNumberInList].description !== listToBeChecked[recordNumberInList].description) {
+  listToBeChecked.forEach((recordInCheckedList, index) => {
+    if (requiredList[index].name !== recordInCheckedList.name ||
+          requiredList[index].phone !== recordInCheckedList.phone ||
+          requiredList[index].description !== recordInCheckedList.description) {
       comparsionResult = false;
-      break;
     }
-    recordNumberInList++;
-  }
+  });
   return comparsionResult;
 };
+
 // if 'exclude matches' key is set, found records will be excluded from results
 const filterRecords = (searchFiltersObject, jsonArray, filterParameter = 'includeMatches') => {
   const resultsArray = jsonArray.filter(record => {

@@ -157,5 +157,5 @@ function (argv) {
   }
   )
   .demandCommand(1, 'You need at least one command before moving on')
-  .help('help')
+  .help()
   .argv;
