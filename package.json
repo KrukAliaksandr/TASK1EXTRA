@@ -2,9 +2,13 @@
   "name": "task1extra",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "./src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "testAdd": "node src/index Add -f=phonebook1 -t=EPAM --list=Nick-124415-manager John-1398591-QaEngineer",
+    "testRemove": "node src/index Remove -f=phonebook1 -t=EPAM --list=Nick-124415-manager John-1398591-QaEngineer",
+    "testFind": "node src/index Find -f=phonebook1 -t=EPAM --list=Nick-124415-manager John-1398591-QaEngineer",
+    "testList":"node src/yargs List -f=test -t=IBA"
   },
   "repository": {
     "type": "git",

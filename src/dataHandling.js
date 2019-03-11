@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const removeRecordsFromFile = (args, requiredFile) => {
   const results = filterRecords(createRecord(args), requiredFile, 'excludeMatches');
-  fs.writeFileSync(`./testSamples/${args.file}.json`, JSON.stringify(results, null, '\t'), 'utf8', () => {
+  fs.writeFileSync(`./phonebooks/${args.file}.json`, JSON.stringify(results, null, '\t'), 'utf8', () => {
   });
 };
 
@@ -14,7 +14,7 @@ const findRecordsInFile = (args, requiredFile) => {
 
 const writeRecordToFile = (args, requiredFile) => {
   requiredFile.push(createRecord(args));
-  fs.writeFileSync(`./testSamples/${args.file}.json`, JSON.stringify(requiredFile, null, '\t'), 'utf8', () => {
+  fs.writeFileSync(`./phonebooks/${args.file}.json`, JSON.stringify(requiredFile, null, '\t'), 'utf8', () => {
   });
 };
 
@@ -48,6 +48,7 @@ const createRecord = (args) => {
 const compareEmployeeLists = (requiredList, listToBeChecked) => {
   let comparsionResult = true;
   let recordNumberInList = 0;
+  // listToBeChecked.forEach(record,index){}
   while (recordNumberInList < listToBeChecked.length) {
     if (requiredList[recordNumberInList].name !== listToBeChecked[recordNumberInList].name ||
       requiredList[recordNumberInList].phone !== listToBeChecked[recordNumberInList].phone ||
@@ -63,7 +64,7 @@ const compareEmployeeLists = (requiredList, listToBeChecked) => {
 const filterRecords = (searchFiltersObject, jsonArray, filterParameter = 'includeMatches') => {
   const resultsArray = jsonArray.filter(record => {
     let recordComparsionResult = true;
-    for (let parameter in record) {
+    for (let parameter in searchFiltersObject) {
       switch (parameter) {
         case 'name':
           if ((record.name !== searchFiltersObject.name)) recordComparsionResult = false;
@@ -75,8 +76,9 @@ const filterRecords = (searchFiltersObject, jsonArray, filterParameter = 'includ
           if ((record.description !== searchFiltersObject.description)) recordComparsionResult = false;
           break;
         case 'empList':
-          // search for substring in character name. Approve only if the substring is situated at the start.
-          if (compareEmployeeLists(searchFiltersObject.empList, record.empList) === false) {
+          if (!(`empList` in record)) {
+            recordComparsionResult = false;
+          } else if (compareEmployeeLists(searchFiltersObject.empList, record.empList) === false) {
             recordComparsionResult = false;
           }
           break;
